@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Konkomba Translator Pro</title>
+
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#ff2d2d">
+  <link rel="icon" href="./icon-192.png">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+
+  <style>
+    :root{
+      --bg:#0b0b0d;
+      --panel:#151519;
+      --panel2:#1d1d24;
+      --panel3:#24242c;
+      --text:#ffffff;
+      --muted:#b8bcc8;
+      --accent:#ff2d2d;
+      --accent2:#ff5757;
+      --good:#22c55e;
+      --border:rgba(255,255,255,0.08);
+      --radius:18px;
+      --shadow:0 18px 40px rgba(0,0,0,0.25);
+    }
+
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+      font-family:Arial, Helvetica, sans-serif;
+    }
+
+    body{
+      min-height:100vh;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(255,45,45,0.13), transparent 25%),
+        radial-gradient(circle at bottom left, rgba(255,45,45,0.08), transparent 20%),
+        linear-gradient(135deg,#09090b,#111116);
+      padding:24px;
+    }
+
+    .wrap{
+      max-width:1200px;
+      margin:auto;
+    }
+
+    .hero{
+      text-align:center;
+      margin-bottom:24px;
+    }
+
+    .hero h1{
+      font-size:clamp(2rem,4vw,3.6rem);
+      margin-bottom:10px;
+      letter-spacing:-0.5px;
+    }
+
+    .hero p{
+      color:var(--muted);
+      max-width:850px;
+      margin:auto;
+      line-height:1.7;
+    }
+
+    .hero .brand{
+      display:inline-block;
+      margin-top:12px;
+      padding:8px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.05);
+      border:1px solid var(--border);
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .card{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:22px;
+      margin-bottom:18px;
+      box-shadow:var(--shadow);
+    }
+
+    .toolbar{
+      display:grid;
+      grid-template-columns:1fr auto auto auto;
+      gap:12px;
+      margin-bottom:18px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+    }
+
+    .triple{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      gap:18px;
+    }
+
+    .search-tools{
+      display:grid;
+      grid-template-columns:1.2fr 0.8fr auto;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    .admin-tools{
+      display:grid;
+      grid-template-columns:1fr 1fr auto;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    select,input,textarea,button{
+      width:100%;
+      border:none;
+      outline:none;
+      border-radius:14px;
+      padding:14px 16px;
+      font-size:15px;
+    }
+
+    select,input,textarea{
+      background:var(--panel2);
+      color:var(--text);
+      border:1px solid var(--border);
+    }
+
+    textarea{
+      min-height:260px;
+      resize:vertical;
+      line-height:1.75;
+    }
+
+    button{
+      cursor:pointer;
+      font-weight:700;
+      transition:.2s ease;
+    }
+
+    button:hover{
+      transform:translateY(-1px);
+    }
+
+    .btn-primary{
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:#fff;
+    }
+
+    .btn-secondary{
+      background:var(--panel3);
+      color:#fff;
+      border:1px solid var(--border);
+    }
+
+    .btn-good{
+      background:var(--good);
+      color:#fff;
+    }
+
+    .label{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:10px;
+      font-weight:700;
+    }
+
+    .tiny-btn{
+      width:auto;
+      padding:10px 14px;
+      border-radius:10px;
+      font-size:13px;
+    }
+
+    .output{
+      min-height:260px;
+      background:var(--panel2);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:16px;
+      line-height:1.75;
+      white-space:pre-wrap;
+    }
+
+    .status{
+      margin-top:14px;
+      color:#ffd7d7;
+      line-height:1.6;
+      font-size:14px;
+      white-space:pre-wrap;
+    }
+
+    .success{
+      color:#c7f7d1;
+    }
+
+    .muted{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .stats{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .tag{
+      display:inline-block;
+      padding:6px 11px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.06);
+      color:var(--muted);
+      font-size:12px;
+      border:1px solid rgba(255,255,255,0.04);
+    }
+
+    .result-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:10px;
+    }
+
+    .result-item,
+    .list-item{
+      background:var(--panel2);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:12px 14px;
+      line-height:1.5;
+      font-size:14px;
+    }
+
+    .result-type{
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+
+    .empty{
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .history-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .footer-note{
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+      margin-top:14px;
+    }
+
+    @media (max-width: 900px){
+      .toolbar,
+      .grid,
+      .triple,
+      .search-tools,
+      .admin-tools{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <h1>Konkomba Translator Pro</h1>
+      <p>
+        A hybrid Konkomba ↔ English translator built from your own dictionary, Bible sentence pairs,
+        adjective data, grammar helper words, glossary, and admin-added custom words.
+      </p>
+      <div class="brand">Built from your Konkomba dataset</div>
+    </div>
+
+    <div class="card">
+      <div class="toolbar">
+        <select id="direction">
+          <option value="konkomba_to_english">Konkomba → English</option>
+          <option value="english_to_konkomba">English → Konkomba</option>
+        </select>
+        <button class="btn-secondary" id="swapBtn" type="button">Swap</button>
+        <button class="btn-primary" id="translateBtn" type="button">Translate</button>
+        <button class="btn-secondary" id="clearBtn" type="button">Clear</button>
+      </div>
+
+      <div class="grid">
+        <div>
+          <div class="label">
+            <span>Input</span>
+          </div>
+          <textarea id="inputText" placeholder="Type Konkomba or English here..."></textarea>
+        </div>
+
+        <div>
+          <div class="label">
+            <span>Output</span>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="btn-secondary tiny-btn" id="copyBtn" type="button">Copy</button>
+              <button class="btn-good tiny-btn" id="favoriteBtn" type="button">Save Favorite</button>
+            </div>
+          </div>
+          <div id="outputText" class="output">Your translation will appear here.</div>
+        </div>
+      </div>
+
+      <div id="status" class="status"></div>
+
+      <div class="stats">
+        <span class="tag" id="dictCountTag">Dictionary: 0</span>
+        <span class="tag" id="sentenceCountTag">Sentences: 0</span>
+        <span class="tag" id="glossaryCountTag">Glossary: 0</span>
+        <span class="tag" id="adminCountTag">Admin Words: 0</span>
+        <span class="tag">Bible Sentences Added</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="label">
+        <span>Admin Word Adder</span>
+      </div>
+
+      <div class="admin-tools">
+        <input id="adminWordInput" type="text" placeholder="Konkomba word or phrase" />
+        <input id="adminMeaningInput" type="text" placeholder="English meaning" />
+        <button class="btn-primary" id="adminSaveBtn" type="button">Add Word</button>
+      </div>
+
+      <p class="muted" style="margin-bottom:14px;">
+        Add new words or phrases to your translator. They will be saved in this browser and used immediately.
+      </p>
+
+      <div id="adminWordList"></div>
+    </div>
+
+    <div class="card">
+      <div class="label">
+        <span>Search Dataset</span>
+      </div>
+
+      <div class="search-tools">
+        <input id="searchInput" type="text" placeholder="Search Konkomba or English..." />
+        <select id="categoryFilter">
+          <option value="all">All Categories</option>
+          <option value="identity">Identity</option>
+          <option value="language">Language</option>
+          <option value="place">Place</option>
+          <option value="geography">Geography</option>
+          <option value="religion">Religion</option>
+          <option value="settlement">Settlement</option>
+          <option value="social">Social</option>
+          <option value="politics">Politics</option>
+          <option value="military">Military</option>
+          <option value="farming">Farming</option>
+          <option value="ecology">Ecology</option>
+        </select>
+        <button class="btn-secondary" id="searchClearBtn" type="button">Clear Search</button>
+      </div>
+
+      <p class="muted" style="margin-bottom:14px;">
+        Search across dictionary words, Bible sentence pairs, glossary entries, and admin-added words.
+      </p>
+
+      <div id="searchResults" class="result-grid"></div>
+    </div>
+
+    <div class="triple">
+      <div class="card">
+        <div class="label">
+          <span>Recent History</span>
+        </div>
+        <div class="history-actions">
+          <button class="btn-secondary tiny-btn" id="clearHistoryBtn" type="button">Clear History</button>
+        </div>
+        <div id="historyList"></div>
+      </div>
+
+      <div class="card">
+        <div class="label">
+          <span>Favorites</span>
+        </div>
+        <div class="history-actions">
+          <button class="btn-secondary tiny-btn" id="clearFavoritesBtn" type="button">Clear Favorites</button>
+        </div>
+        <div id="favoritesList"></div>
+      </div>
+
+      <div class="card">
+        <div class="label">
+          <span>About This App</span>
+        </div>
+        <p class="muted">This app combines:</p>
+        <div class="stats" style="margin-top:12px;">
+          <span class="tag">Core Dictionary</span>
+          <span class="tag">Bible Sentence Pairs</span>
+          <span class="tag">Adjective Data</span>
+          <span class="tag">Glossary</span>
+          <span class="tag">Grammar Words</span>
+          <span class="tag">Admin Word Adder</span>
+        </div>
+        <p class="muted" style="margin-top:14px;">
+          If a full sentence is not found, it still tries to translate phrases and words inside the sentence.
+        </p>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      Spibody Digitalz Hub • Konkomba Translator Pro
+    </div>
+  </div>
+
+  <script>
+    const baseDictionary = {
+      "ndo puaa": "good morning",
+      "adoon": "good morning",
+      "kijook puaa": "good evening",
+      "ani kijook": "good evening",
+      "ani nwiin": "good afternoon",
+      "lafe bi": "i am fine",
+      "ngeen bi": "i am fine",
+      "ngeen bi saa": "how are you",
+      "lafe bi say": "how are you",
+      "ni bi maen": "how are you",
+      "acha la": "where are you going",
+      "la ka acha": "where are you going",
+      "labu": "where",
+      "biyin si maen": "what is your name",
+      "ayinbil": "your name",
+      "ayinbil saan maen": "what is your name",
+      "anyen laa": "where are you from",
+      "nla si": "i love you",
+      "n neen si": "i love you",
+      "maa la si": "i don't love you",
+      "maa neen si": "i don't love you",
+      "nbuaan": "my love",
+      "npuu": "my life",
+      "manin pou": "my life",
+      "nchal": "my husband",
+      "agnaen": "you are beautiful",
+      "agnaen paam": "you are very beautiful",
+      "aa gnen": "you are not beautiful",
+      "aa seen liniwanbil": "you are ugly",
+      "lichaa quin": "go home",
+      "licha suku": "go to school",
+      "licha school": "go to school",
+      "umomor": "teacher",
+      "njua": "my friend",
+      "njo": "my friend",
+      "unayuk": "thief",
+      "ujor": "fool",
+      "upii": "sheep",
+      "ugnoo": "goat",
+      "ugnoob": "goat",
+      "unaa": "cow",
+      "asen unaa": "you are a cow",
+      "ugber": "pig",
+      "iween": "disease",
+      "tibunbun": "sickness",
+      "abun aa": "you are sick",
+      "kiwankuk": "animal",
+      "ukpii": "he is dead / she is dead",
+
+      "sakpiin": "big",
+      "sakpen": "big",
+      "waatir": "small",
+      "geŋgeŋ": "short",
+      "geŋ": "short",
+      "bamɔn": "proper / real",
+      "suon": "slow",
+      "chain": "clean",
+      "fɔfɔk": "long",
+      "fɔk": "long",
+      "nyoo": "deep",
+      "kpok": "old",
+      "pɔɔn": "new",
+      "nyaan": "good",
+      "ŋan": "good",
+      "bɔmbɔn": "black",
+      "bɔn": "black",
+      "pipiin": "white",
+      "piin": "white",
+      "man": "red",
+      "mɛn": "red",
+      "mamɛn": "red",
+      "pɔɔ": "hard / strong",
+      "muan": "sweet",
+      "kuan": "dry",
+      "ton": "hot",
+      "diin": "soft",
+      "nyuun": "heavy",
+
+      "ye": "is",
+      "pam": "really",
+      "na": "the",
+      "la": "(emphasis)",
+      "aa": "not",
+      "bi": "are",
+      "u": "he/she"
+    };
+
+    const sentencePairs = [
+      { konkomba: "uwumbɔr aah nan naan kitaapaak ni kitiŋ", english: "in the beginning god created the heavens and the earth" },
+      { konkomba: "kitiŋ aa nan kpa liker", english: "the earth was formless and empty" },
+      { konkomba: "uwumbɔr aafuur nyaan mu le nan bi nnyun ngbaan aapaacham", english: "god's spirit was hovering over the surface of the waters" },
+      { konkomba: "uwumbɔr bui ke nwiihn ŋa", english: "god said let there be light" },
+      { konkomba: "uwumbɔr nan kan ke nwiihn ngbaan ŋan", english: "god saw that the light was good" },
+      { konkomba: "uwumbɔr yin nima ke kitaapaak", english: "god called the expanse sky" },
+      { konkomba: "uwumbɔr nan naan iwiin sakpiin ilee la", english: "god made the two great lights" },
+      { konkomba: "uwumbɔr nan naan iŋmabi mu", english: "he also made the stars" },
+      { konkomba: "uwumbɔr nan naan ijasakpiin ni iwaatiir", english: "god created the large sea creatures and living things" },
+      { konkomba: "uwumbɔr nan naan binib ki di naŋ ubaa", english: "god created man in his own image" },
+      { konkomba: "uwumbɔr nan naan uja ni upii la", english: "male and female he created them" },
+      { konkomba: "kina le uwumbɔr nan naan kitaapaak ni kitiŋ ni tiwan mɔmɔk doo", english: "the heavens the earth and all their vast array were finished" },
+      { konkomba: "winlole daal le uwumbɔr nan tun lituln mɔmɔk doo ki kal fuur", english: "on the seventh day god finished his work and rested" },
+      { konkomba: "uwumbɔr nan ŋa tinyoor ŋa winlole daal pu ki ŋa mu chain", english: "god blessed the seventh day and made it holy" },
+      { konkomba: "uwumbɔr nan di titan ki di naan ujaa", english: "the lord god formed man from the dust of the ground" },
+      { konkomba: "uwumbɔr nan ŋa isui i lu ŋisubil na aasaak liwipuul wɔb edenn aatiŋ ni", english: "the lord god planted a garden eastward in eden" },
+      { konkomba: "uwumbɔr nan di waah naan uja u na ŋa ki ponn ni", english: "there he put the man whom he had formed" },
+      { konkomba: "uwumbɔr nan di uja ngbaan ŋa kisaak ngbaan ni ke u li ko ki li lik kisaak ngbaan", english: "the lord god took the man and put him into the garden of eden to cultivate and keep it" },
+      { konkomba: "aa ga ŋmaa ji ŋisubil ŋi mɔmɔk bi kisaak kee ponn ni na", english: "you may freely eat of every tree of the garden" },
+      { konkomba: "aa taa ji busub ngbaan aasubil", english: "but you shall not eat of that tree" },
+      { konkomba: "naa ŋan ke uja li bi ubaa", english: "it is not good for the man to be alone" },
+      { konkomba: "m ga naan uŋeer u ga li ter u na ki tii u", english: "i will make him a helper comparable to him" },
+      { konkomba: "uwumbɔr nan di nsikaakpabf na ki di naan upii", english: "the lord god made a woman from the rib" },
+      { konkomba: "nima pu le ni ŋan ke uja ni upuu nya cha bitetiib ni binatiib ki kpaan tɔb chee ki ŋa unibaan", english: "therefore a man will leave his father and mother and join with his wife and they will be one flesh" },
+      { konkomba: "le uja ni upii nan chuun biŋmeen kaa san inimɔɔn", english: "the man and his wife were both naked and they were not ashamed" },
+
+      { konkomba: "li dacha l ngbaan popun ye li sakpen l la", english: "that house is really big" },
+      { konkomba: "ki ju k ngbaan ye ki bamɔn la", english: "that knife is a real one" },
+      { konkomba: "konja aa kekeln piin", english: "konja's cloth is white" },
+      { konkomba: "waa lɔɔr ngbaan kpokl la", english: "that car is old" },
+      { konkomba: "u ŋoob ye chain pam", english: "the goat is really clean" },
+      { konkomba: "ugnoob ye chain pam", english: "the goat is really clean" },
+      { konkomba: "na nyaan aa nan waa bo", english: "a good mother does not hate her child" }
+    ];
+
+    const glossaryDataset = [
+      { term: "Bekpokpam", english: "Konkomba people", category: "identity", notes: "Self-name used for the Konkomba people." },
+      { term: "Lekpokpam", english: "Konkomba language", category: "language", notes: "Self-name used for the Konkomba language." },
+      { term: "Kekpokpam", english: "Konkomba land / country", category: "place", notes: "Self-name used for the Konkomba homeland." },
+      { term: "Bedagbam", english: "Dagomba people", category: "identity", notes: "Konkomba name for the Dagomba." },
+      { term: "Dagbane", english: "Dagomba language", category: "language", notes: "Language spoken by the Dagomba." },
+      { term: "Dagbong", english: "Dagomba country / state", category: "place", notes: "Traditional Dagomba territory." },
+      { term: "Oti", english: "Oti river", category: "geography", notes: "Major river associated with Konkomba settlement." },
+      { term: "Saboba", english: "Saboba", category: "place", notes: "Important Konkomba-speaking area in Ghana." },
+      { term: "Gushiego", english: "Gushiego", category: "place", notes: "Important area in Konkomba-Dagomba relations." },
+      { term: "chief", english: "chief", category: "politics", notes: "Political office mentioned throughout the text." },
+      { term: "chiefdom", english: "chiefdom", category: "politics", notes: "Political territory or office under a chief." },
+      { term: "shrine", english: "shrine", category: "religion", notes: "Important in household and ritual life." },
+      { term: "yam", english: "yam", category: "farming", notes: "Important crop in the seasonal cycle." },
+      { term: "sorghum", english: "sorghum / guinea corn", category: "farming", notes: "Main staple crop and preferred food." },
+      { term: "lepir", english: "dry season", category: "ecology", notes: "Season name mentioned in the text." },
+      { term: "kesie", english: "wet season", category: "ecology", notes: "Season name mentioned in the text." }
+    ];
+
+    const baseEnglishToKonkomba = {
+      "good morning": "ndo puaa",
+      "good evening": "kijook puaa",
+      "good afternoon": "ani nwiin",
+      "i am fine": "lafe bi",
+      "how are you": "ngeen bi saa",
+      "where are you going": "acha la",
+      "where": "labu",
+      "what is your name": "biyin si maen",
+      "your name": "ayinbil",
+      "where are you from": "anyen laa",
+      "i love you": "nla si",
+      "i don't love you": "maa la si",
+      "my love": "nbuaan",
+      "my life": "npuu",
+      "my husband": "nchal",
+      "you are beautiful": "agnaen",
+      "you are very beautiful": "agnaen paam",
+      "you are not beautiful": "aa gnen",
+      "you are ugly": "aa seen liniwanbil",
+      "go home": "lichaa quin",
+      "go to school": "licha suku",
+      "teacher": "umomor",
+      "my friend": "njua",
+      "thief": "unayuk",
+      "fool": "ujor",
+      "sheep": "upii",
+      "goat": "ugnoob",
+      "cow": "unaa",
+      "you are a cow": "asen unaa",
+      "pig": "ugber",
+      "disease": "iween",
+      "sickness": "tibunbun",
+      "you are sick": "abun aa",
+      "animal": "kiwankuk",
+      "he is dead / she is dead": "ukpii",
+      "big": "sakpiin",
+      "small": "waatir",
+      "short": "geŋgeŋ",
+      "proper": "bamɔn",
+      "real": "bamɔn",
+      "slow": "suon",
+      "clean": "chain",
+      "long": "fɔfɔk",
+      "deep": "nyoo",
+      "old": "kpok",
+      "new": "pɔɔn",
+      "good": "nyaan",
+      "black": "bɔmbɔn",
+      "white": "pipiin",
+      "red": "man",
+      "hard": "pɔɔ",
+      "strong": "pɔɔ",
+      "sweet": "muan",
+      "dry": "kuan",
+      "hot": "ton",
+      "soft": "diin",
+      "heavy": "nyuun",
+      "is": "ye",
+      "really": "pam",
+      "the": "na",
+      "not": "aa",
+      "are": "bi"
+    };
+
+    let adminWords = JSON.parse(localStorage.getItem("konkomba_admin_words") || "{}");
+    let translationHistory = JSON.parse(localStorage.getItem("konkomba_history") || "[]");
+    let favorites = JSON.parse(localStorage.getItem("konkomba_favorites") || "[]");
+
+    function normalize(text) {
+      return text
+        .toLowerCase()
+        .replace(/[.,!?;:;"'“”‘’()]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function tokenizeRaw(text) {
+      return normalize(text).split(" ").filter(Boolean);
+    }
+
+    function buildDictionary() {
+      return { ...baseDictionary, ...adminWords };
+    }
+
+    function buildEnglishMap() {
+      const map = { ...baseEnglishToKonkomba };
+      for (const [word, meaning] of Object.entries(adminWords)) {
+        if (!map[meaning]) {
+          map[meaning] = word;
+        }
+      }
+      return map;
+    }
+
+    function levenshtein(a, b) {
+      const matrix = Array.from({ length: b.length + 1 }, () => []);
+      for (let i = 0; i <= b.length; i++) matrix[i][0] = i;
+      for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+
+      for (let i = 1; i <= b.length; i++) {
+        for (let j = 1; j <= a.length; j++) {
+          if (b.charAt(i - 1) === a.charAt(j - 1)) {
+            matrix[i][j] = matrix[i - 1][j - 1];
+          } else {
+            matrix[i][j] = Math.min(
+              matrix[i - 1][j - 1] + 1,
+              matrix[i][j - 1] + 1,
+              matrix[i - 1][j] + 1
+            );
+          }
+        }
+      }
+      return matrix[b.length][a.length];
+    }
+
+    function getSuggestions(term, keys, limit = 3) {
+      const scored = keys.map(k => ({ key: k, score: levenshtein(term, k) }));
+      scored.sort((a, b) => a.score - b.score);
+      return scored.slice(0, limit).map(x => x.key);
+    }
+
+    function findExactSentenceMatch(input, direction) {
+      const clean = normalize(input);
+      if (!clean) return null;
+
+      if (direction === "konkomba_to_english") {
+        return sentencePairs.find(pair => normalize(pair.konkomba) === clean) || null;
+      }
+      return sentencePairs.find(pair => normalize(pair.english) === clean) || null;
+    }
+
+    function sentenceTranslate(input, direction) {
+      const match = findExactSentenceMatch(input, direction);
+      if (!match) return null;
+
+      return direction === "konkomba_to_english"
+        ? { result: match.english, source: "sentence", missing: [], suggestions: {} }
+        : { result: match.konkomba, source: "sentence", missing: [], suggestions: {} };
+    }
+
+    function phraseWordTranslate(text, dict) {
+      const words = tokenizeRaw(text);
+      if (!words.length) return { result: "", source: "empty", missing: [], suggestions: {} };
+
+      const translated = [];
+      const missing = [];
+      const suggestions = {};
+      let i = 0;
+
+      while (i < words.length) {
+        let matched = false;
+
+        for (let size = Math.min(6, words.length - i); size >= 1; size--) {
+          const chunk = words.slice(i, i + size).join(" ");
+          if (dict[chunk]) {
+            translated.push(dict[chunk]);
+            i += size;
+            matched = true;
+            break;
+          }
+        }
+
+        if (!matched) {
+          const word = words[i];
+          translated.push("[" + word + "]");
+          missing.push(word);
+          suggestions[word] = getSuggestions(word, Object.keys(dict));
+          i++;
+        }
+      }
+
+      return {
+        result: translated.join(" "),
+        source: "dictionary",
+        missing: [...new Set(missing)],
+        suggestions
+      };
+    }
+
+    function englishPhraseWordTranslate(text, dict) {
+      const words = tokenizeRaw(text);
+      if (!words.length) return { result: "", source: "empty", missing: [], suggestions: {} };
+
+      const translated = [];
+      const missing = [];
+      const suggestions = {};
+      let i = 0;
+
+      while (i < words.length) {
+        let matched = false;
+
+        for (let size = Math.min(6, words.length - i); size >= 1; size--) {
+          const chunk = words.slice(i, i + size).join(" ");
+          if (dict[chunk]) {
+            translated.push(dict[chunk]);
+            i += size;
+            matched = true;
+            break;
+          }
+        }
+
+        if (!matched) {
+          const word = words[i];
+          translated.push("[" + word + "]");
+          missing.push(word);
+          suggestions[word] = getSuggestions(word, Object.keys(dict));
+          i++;
+        }
+      }
+
+      return {
+        result: translated.join(" "),
+        source: "dictionary",
+        missing: [...new Set(missing)],
+        suggestions
+      };
+    }
+
+    function smoothEnglish(text) {
+      if (!text) return text;
+
+      let words = text.split(" ").filter(Boolean);
+      words = words.filter(w => w !== "[]");
+
+      const adjectives = new Set([
+        "clean", "good", "big", "small", "short", "long", "deep",
+        "old", "new", "black", "white", "red", "hard", "strong",
+        "sweet", "dry", "hot", "soft", "heavy", "beautiful", "ugly"
+      ]);
+
+      for (let i = 0; i < words.length - 1; i++) {
+        if (adjectives.has(words[i]) && words[i + 1] === "really") {
+          const adj = words[i];
+          words[i] = "really";
+          words[i + 1] = adj;
+          i++;
+        }
+      }
+
+      const pronouns = new Set(["i", "you", "he", "she", "we", "they", "it"]);
+      const commonNouns = new Set([
+        "goat", "cow", "pig", "sheep", "teacher", "man", "woman",
+        "child", "friend", "house", "knife", "car", "hole", "mother", "god"
+      ]);
+
+      if (words.length && !pronouns.has(words[0]) && commonNouns.has(words[0])) {
+        words.unshift("the");
+      }
+
+      words = words.filter(w => w !== "(emphasis)");
+      return words.join(" ");
+    }
+
+    function hybridTranslate(input, direction) {
+      const sentenceResult = sentenceTranslate(input, direction);
+      if (sentenceResult) return sentenceResult;
+
+      const dictionary = buildDictionary();
+      const englishMap = buildEnglishMap();
+
+      if (direction === "konkomba_to_english") {
+        return phraseWordTranslate(input, dictionary);
+      }
+      return englishPhraseWordTranslate(input, englishMap);
+    }
+
+    const directionEl = document.getElementById("direction");
+    const inputTextEl = document.getElementById("inputText");
+    const outputTextEl = document.getElementById("outputText");
+    const statusEl = document.getElementById("status");
+    const searchInputEl = document.getElementById("searchInput");
+    const categoryFilterEl = document.getElementById("categoryFilter");
+    const searchResultsEl = document.getElementById("searchResults");
+    const historyListEl = document.getElementById("historyList");
+    const favoritesListEl = document.getElementById("favoritesList");
+    const adminWordListEl = document.getElementById("adminWordList");
+    const dictCountTag = document.getElementById("dictCountTag");
+    const sentenceCountTag = document.getElementById("sentenceCountTag");
+    const glossaryCountTag = document.getElementById("glossaryCountTag");
+    const adminCountTag = document.getElementById("adminCountTag");
+
+    function updateCounts() {
+      dictCountTag.textContent = "Dictionary: " + Object.keys(buildDictionary()).length;
+      sentenceCountTag.textContent = "Sentences: " + sentencePairs.length;
+      glossaryCountTag.textContent = "Glossary: " + glossaryDataset.length;
+      adminCountTag.textContent = "Admin Words: " + Object.keys(adminWords).length;
+    }
+
+    function getSearchItems() {
+      const dictItems = Object.entries(buildDictionary()).map(([k, v]) => ({
+        type: "Dictionary",
+        source: k,
+        target: v,
+        category: "dictionary",
+        notes: ""
+      }));
+
+      const sentenceItems = sentencePairs.map(pair => ({
+        type: "Sentence",
+        source: pair.konkomba,
+        target: pair.english,
+        category: "sentence",
+        notes: ""
+      }));
+
+      const glossaryItems = glossaryDataset.map(item => ({
+        type: "Glossary",
+        source: item.term,
+        target: item.english,
+        category: item.category,
+        notes: item.notes
+      }));
+
+      return [...dictItems, ...sentenceItems, ...glossaryItems];
+    }
+
+    function renderSearch(filter = "", category = "all") {
+      const q = normalize(filter);
+
+      const items = getSearchItems().filter(item => {
+        const textMatch = !q ||
+          normalize(item.source).includes(q) ||
+          normalize(item.target).includes(q) ||
+          normalize(item.notes || "").includes(q);
+
+        const categoryMatch = category === "all" || item.category === category;
+        return textMatch && categoryMatch;
+      });
+
+      searchResultsEl.innerHTML = "";
+
+      if (!items.length) {
+        searchResultsEl.innerHTML = '<div class="result-item empty">No match found.</div>';
+        return;
+      }
+
+      items.slice(0, 80).forEach(item => {
+        const box = document.createElement("div");
+        box.className = "result-item";
+        box.innerHTML = `
+          <div class="result-type">${item.type}${item.category && item.category !== "dictionary" && item.category !== "sentence" ? " • " + item.category : ""}</div>
+          <strong>${item.source}</strong><br>
+          <span style="color:#b8bcc8">${item.target}</span>
+          ${item.notes ? `<div style="margin-top:6px;color:#9ea4b4;font-size:12px;">${item.notes}</div>` : ""}
+        `;
+        searchResultsEl.appendChild(box);
+      });
+    }
+
+    function renderHistory() {
+      historyListEl.innerHTML = "";
+      if (!translationHistory.length) {
+        historyListEl.innerHTML = '<div class="list-item empty">No history yet.</div>';
+        return;
+      }
+
+      translationHistory.slice().reverse().forEach(item => {
+        const div = document.createElement("div");
+        div.className = "list-item";
+        div.innerHTML = `
+          <div class="result-type">${item.direction.replaceAll("_", " ")}</div>
+          <strong>${item.input}</strong><br>
+          <span style="color:#b8bcc8">${item.output}</span>
+        `;
+        historyListEl.appendChild(div);
+      });
+    }
+
+    function renderFavorites() {
+      favoritesListEl.innerHTML = "";
+      if (!favorites.length) {
+        favoritesListEl.innerHTML = '<div class="list-item empty">No favorites saved.</div>';
+        return;
+      }
+
+      favorites.slice().reverse().forEach(item => {
+        const div = document.createElement("div");
+        div.className = "list-item";
+        div.innerHTML = `
+          <div class="result-type">${item.direction.replaceAll("_", " ")}</div>
+          <strong>${item.input}</strong><br>
+          <span style="color:#b8bcc8">${item.output}</span>
+        `;
+        favoritesListEl.appendChild(div);
+      });
+    }
+
+    function renderAdminWords() {
+      adminWordListEl.innerHTML = "";
+      const entries = Object.entries(adminWords);
+
+      if (!entries.length) {
+        adminWordListEl.innerHTML = '<div class="list-item empty">No admin-added words yet.</div>';
+        return;
+      }
+
+      entries.slice().reverse().forEach(([word, meaning]) => {
+        const div = document.createElement("div");
+        div.className = "list-item";
+        div.innerHTML = `
+          <strong>${word}</strong><br>
+          <span style="color:#b8bcc8">${meaning}</span>
+        `;
+        adminWordListEl.appendChild(div);
+      });
+    }
+
+    function saveHistory(input, output) {
+      if (!input || !output) return;
+
+      translationHistory.push({
+        input,
+        output,
+        direction: directionEl.value,
+        time: Date.now()
+      });
+
+      if (translationHistory.length > 20) {
+        translationHistory = translationHistory.slice(-20);
+      }
+
+      localStorage.setItem("konkomba_history", JSON.stringify(translationHistory));
+      renderHistory();
+    }
+
+    function addAdminWord(word, meaning) {
+      const cleanWord = normalize(word);
+      const cleanMeaning = normalize(meaning);
+
+      if (!cleanWord || !cleanMeaning) return false;
+
+      adminWords[cleanWord] = cleanMeaning;
+      localStorage.setItem("konkomba_admin_words", JSON.stringify(adminWords));
+
+      updateCounts();
+      renderAdminWords();
+      renderSearch();
+
+      return true;
+    }
+
+    function translate() {
+      const input = inputTextEl.value.trim();
+
+      if (!input) {
+        outputTextEl.textContent = "Your translation will appear here.";
+        statusEl.textContent = "Enter text to translate.";
+        statusEl.className = "status";
+        return;
+      }
+
+      const result = hybridTranslate(input, directionEl.value);
+      let finalText = result.result || "No translation found.";
+
+      if (directionEl.value === "konkomba_to_english") {
+        finalText = smoothEnglish(finalText);
+      }
+
+      outputTextEl.textContent = finalText;
+
+      if (!result.missing.length) {
+        let msg = "Translation completed.";
+        if (result.source === "sentence") msg += " Full sentence match used.";
+        if (result.source === "dictionary") msg += " Phrase/word translation used.";
+        statusEl.textContent = msg;
+        statusEl.className = "status success";
+      } else {
+        let msg = "Partial translation completed.\n";
+        msg += "Missing words: " + result.missing.join(", ");
+
+        const lines = [];
+        for (const word of result.missing) {
+          if (result.suggestions[word] && result.suggestions[word].length) {
+            lines.push(word + " → maybe: " + result.suggestions[word].join(", "));
+          }
+        }
+
+        if (lines.length) {
+          msg += "\nSuggestions:\n" + lines.join("\n");
+        }
+
+        statusEl.textContent = msg;
+        statusEl.className = "status";
+      }
+
+      saveHistory(input, finalText || "");
+    }
+
+    function saveFavorite() {
+      const input = inputTextEl.value.trim();
+      const output = outputTextEl.textContent.trim();
+
+      if (!input || !output || output === "Your translation will appear here.") {
+        statusEl.textContent = "Translate something before saving favorite.";
+        statusEl.className = "status";
+        return;
+      }
+
+      favorites.push({
+        input,
+        output,
+        direction: directionEl.value,
+        time: Date.now()
+      });
+
+      localStorage.setItem("konkomba_favorites", JSON.stringify(favorites));
+      renderFavorites();
+      statusEl.textContent = "Saved to favorites.";
+      statusEl.className = "status success";
+    }
+
+    function clearAll() {
+      inputTextEl.value = "";
+      outputTextEl.textContent = "Your translation will appear here.";
+      statusEl.textContent = "";
+      statusEl.className = "status";
+    }
+
+    function swapDirection() {
+      directionEl.value =
+        directionEl.value === "konkomba_to_english"
+          ? "english_to_konkomba"
+          : "konkomba_to_english";
+    }
+
+    function copyOutput() {
+      const text = outputTextEl.textContent;
+      if (!text || text === "Your translation will appear here.") return;
+      navigator.clipboard.writeText(text);
+      statusEl.textContent = "Translation copied.";
+      statusEl.className = "status success";
+    }
+
+    function clearHistory() {
+      translationHistory = [];
+      localStorage.removeItem("konkomba_history");
+      renderHistory();
+    }
+
+    function clearFavorites() {
+      favorites = [];
+      localStorage.removeItem("konkomba_favorites");
+      renderFavorites();
+    }
+
+    document.getElementById("translateBtn").addEventListener("click", translate);
+    document.getElementById("clearBtn").addEventListener("click", clearAll);
+    document.getElementById("swapBtn").addEventListener("click", swapDirection);
+    document.getElementById("copyBtn").addEventListener("click", copyOutput);
+    document.getElementById("favoriteBtn").addEventListener("click", saveFavorite);
+    document.getElementById("clearHistoryBtn").addEventListener("click", clearHistory);
+    document.getElementById("clearFavoritesBtn").addEventListener("click", clearFavorites);
+
+    document.getElementById("adminSaveBtn").addEventListener("click", () => {
+      const word = document.getElementById("adminWordInput").value.trim();
+      const meaning = document.getElementById("adminMeaningInput").value.trim();
+
+      if (!word || !meaning) {
+        statusEl.textContent = "Enter both the Konkomba word and the English meaning.";
+        statusEl.className = "status";
+        return;
+      }
+
+      const saved = addAdminWord(word, meaning);
+
+      if (saved) {
+        document.getElementById("adminWordInput").value = "";
+        document.getElementById("adminMeaningInput").value = "";
+        statusEl.textContent = "Admin word added successfully.";
+        statusEl.className = "status success";
+      }
+    });
+
+    searchInputEl.addEventListener("input", () => {
+      renderSearch(searchInputEl.value, categoryFilterEl.value);
+    });
+
+    categoryFilterEl.addEventListener("change", () => {
+      renderSearch(searchInputEl.value, categoryFilterEl.value);
+    });
+
+    document.getElementById("searchClearBtn").addEventListener("click", () => {
+      searchInputEl.value = "";
+      categoryFilterEl.value = "all";
+      renderSearch();
+    });
+
+    updateCounts();
+    renderSearch();
+    renderHistory();
+    renderFavorites();
+    renderAdminWords();
+  </script>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js")
+          .then(() => console.log("Service Worker registered"))
+          .catch(err => console.log("Service Worker error:", err));
+      });
+    }
+  </script>
+</body>
+  </html>
